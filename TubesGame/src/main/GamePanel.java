@@ -3,72 +3,44 @@ import inputs.KeyboardInputs;
 import inputs.MouseInputs;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Random;
 import javax.swing.JPanel;
+import static main.Game.GAME_HEIGHT;
+import static main.Game.GAME_WIDTH;
 
 public class GamePanel extends JPanel {
 
     private MouseInputs mouseInputs;
-    private float xDelta = 100, yDelta = 100;
-    private float xDir = 1f, yDir = 1f;
-    private int frames = 0;
-    private long lastCheck;
-    private Color color = new Color(150,20,90);
-    private Random random;
+    private Game game;
+    public GamePanel(Game game){
 
-    public GamePanel(){
-        random = new Random();
         mouseInputs = new MouseInputs(this);
+        this.game = game;
+        setPanelSize();
         addKeyListener(new KeyboardInputs(this));
         addMouseListener(mouseInputs);
         addMouseMotionListener(mouseInputs);
 
     }
 
-    public void changeXDelta(int value){
-        this.xDelta += value;
+
+    private void setPanelSize() {
+        Dimension size = new Dimension(GAME_WIDTH,GAME_HEIGHT);
+        setPreferredSize(size);
+        System.out.println("size : " + GAME_WIDTH+ " : " + GAME_HEIGHT);
     }
 
-    public void changeYDelta(int value){
-        this.yDelta += value;
-    }
 
-    public void setRectPos(int x, int y){
-        this.xDelta = x;
-        this.yDelta = y;
+    public void updateGame(){
     }
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-
-        updateRectangle();
-        g.setColor(color);
-        g.fillRect((int)xDelta,(int)yDelta,200,50);
-
-
-
+        game.render(g);
+    }
+    public Game getGame(){
+        return game;
     }
 
-    private void updateRectangle(){
-        xDelta += xDir;
-        if(xDelta > 400 || xDelta < 0 ){
-            xDir*=-1;
-            color = getRndColor() ;
-            }
 
-        yDelta+=yDir;
-        if(yDelta > 400 || yDelta < 0) {
-            yDir *= -1;
-        }
-    }
 
-    private Color getRndColor(){
-        int r = random.nextInt(255);
-        int g = random.nextInt(255);
-        int b = random.nextInt(255);
-
-        return new Color(r,g,b);
-    }
 }
